@@ -83,7 +83,7 @@ export default function Navbar() {
           <div className="relative">
             <div className="absolute inset-0 bg-[#f05a28]/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <Image 
-              src="/cet.png" 
+              src="/cetlogo.png" 
               alt="CET Logo" 
               width={48} 
               height={48} 

@@ -19,6 +19,15 @@ interface CandidateProps {
   endorsements?: number;
 }
 
+function getDeterministicEndorsements(seed: string): number {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) % 2147483647;
+  }
+  // Keep fallback values in the same visual range as before: 10..59
+  return (Math.abs(hash) % 50) + 10;
+}
+
 export default function CandidateCard({ 
   name, 
   section, 
@@ -27,9 +36,10 @@ export default function CandidateCard({
   onSelect,
   image,
   party = "Independent",
-  endorsements = Math.floor(Math.random() * 50) + 10
+  endorsements
 }: CandidateProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const displayEndorsements = endorsements ?? getDeterministicEndorsements(`${name}-${section}`);
   
   // Magnetic & 3D Tilt Logic
   const x = useMotionValue(0);
@@ -211,7 +221,7 @@ export default function CandidateCard({
             <div className="flex items-center justify-between px-6 py-4 bg-orange-50/50 rounded-[2rem] border border-orange-100">
                <div className="flex flex-col">
                   <span className="text-2xl font-black text-orange-600 leading-none">
-                    {endorsements}
+                    {displayEndorsements}
                   </span>
                   <span className="text-[9px] font-black text-orange-400 uppercase flex items-center gap-1">
                     <Heart size={10} className="fill-current" /> Endorsed
@@ -220,7 +230,7 @@ export default function CandidateCard({
                <div className="h-10 w-[2px] bg-orange-200/50 rounded-full" />
                <div className="flex flex-col">
                   <span className="text-2xl font-black text-orange-600 leading-none">
-                    0{Math.floor(endorsements/12)}
+                    0{Math.floor(displayEndorsements / 12)}
                   </span>
                   <span className="text-[9px] font-black text-orange-400 uppercase flex items-center gap-1">
                     <BarChart3 size={10} /> Rank
@@ -229,7 +239,7 @@ export default function CandidateCard({
                <div className="h-10 w-[2px] bg-orange-200/50 rounded-full" />
                <div className="flex flex-col">
                   <span className="text-2xl font-black text-orange-600 leading-none">
-                    {Math.floor(endorsements * 1.5)}%
+                    {Math.floor(displayEndorsements * 1.5)}%
                   </span>
                   <span className="text-[9px] font-black text-orange-400 uppercase flex items-center gap-1">
                     <Zap size={10} fill="currentColor" /> Trust
